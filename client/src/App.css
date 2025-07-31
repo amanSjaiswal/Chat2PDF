@@ -1,4 +1,4 @@
-.App {
+/* .App {
   text-align: center;
 }
 
@@ -35,4 +35,44 @@
   to {
     transform: rotate(360deg);
   }
+} */
+
+
+
+
+
+/* App.css */
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to bottom right, #d9f4f8da, #d698adc7);
+  overflow-x: hidden;
+}
+
+#root {
+  height: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Utility class for toast or global messages */
+.toast-success {
+  background-color: #4caf50 !important;
+}
+
+.toast-error {
+  background-color: #f44336 !important;
+}
+
+/* Optional app-level wrapper */
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }

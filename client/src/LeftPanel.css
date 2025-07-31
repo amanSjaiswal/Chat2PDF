@@ -1,0 +1,58 @@
+
+.left-panel {
+  padding: 20px;
+   flex: 1;
+  border-right: 1px solid #ddd;
+  box-sizing: border-box;
+  background-color: #d8d1db; /* optional light tone */
+}
+
+.left-panel textarea {
+  width: 100%;
+  height: 150px;
+  padding: 10px;
+  font-size: 1rem;
+  resize: vertical;
+  margin-bottom: 15px;
+  border: 1px solid #8b5656;
+  border-radius: 4px;
+}
+
+/* .button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+} */
+ .button-group {
+  display: flex;
+  justify-content: center; /* 🔥 Centers buttons horizontally */
+  gap: 1rem;
+  flex-wrap: wrap; /* optional: wraps if not enough space */
+}
+
+.clear-btn {
+  background-color: #e85c5c;
+  color: white;
+  border: none;
+}
+
+.status-bar {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: green;
+  margin-bottom: 20px;
+}
+
+.filename-group {
+  margin-bottom: 20px;
+}
+
+.filename-group input {
+  width: 100%;
+  padding: 8px;
+  font-size: 1rem;
+  margin-top: 5px;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+}

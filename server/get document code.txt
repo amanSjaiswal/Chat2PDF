@@ -75,3 +75,156 @@ async function generatePDFfromLink(link, mode = 'full', index = 0) {
 
 module.exports = { generatePDFfromLink };
 
+
+
+
+
+
+
+// final second with all formating 
+
+
+const puppeteer = require('puppeteer');
+const path = require('path');
+const readline = require('readline');
+const fs = require('fs');
+
+/**
+ * Prompt for custom filename or fallback
+ */
+function getCustomFilename(defaultName = 'combined_chat.pdf') {
+  return new Promise(resolve => {
+    const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+    rl.question(`📄 Enter filename for merged PDF (default: ${defaultName}): `, answer => {
+      rl.close();
+      const name = answer.trim();
+      resolve(name ? (name.endsWith('.pdf') ? name : name + '.pdf') : defaultName);
+    });
+  });
+}
+
+/**
+ * Wait for Enter key press or timeout after 2 minutes
+ */
+function waitForEnterOrTimeout(timeoutMs = 120000) {
+  return new Promise(resolve => {
+    const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+
+    const timer = setTimeout(() => {
+      console.log(`⏳ Timeout (${timeoutMs / 1000}s) reached. Proceeding with PDF generation...`);
+      rl.close();
+      resolve();
+    }, timeoutMs);
+
+    rl.question('✅ Press [Enter] to start PDF export after verifying the full chat is loaded...\n', () => {
+      clearTimeout(timer);
+      rl.close();
+      resolve();
+    });
+  });
+}
+
+/**
+ * Launch browser, load chat page, wait for user to confirm, generate full-page PDF
+ */
+async function generatePDFfromLink(link, mode = 'full', index = 0) {
+  const browser = await puppeteer.launch({
+    headless: false,
+    slowMo: 50,
+    args: [
+      '--start-maximized',
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--js-flags="--max-old-space-size=4096"'
+    ],
+    defaultViewport: null
+  });
+
+  const page = await browser.newPage();
+  console.log(`🌐 Opening ChatGPT share link: ${link}`);
+  await page.goto(link, { waitUntil: 'networkidle0', timeout: 180000 });
+  await page.setDefaultTimeout(180000);
+
+  const height = await page.evaluate(() => document.body.scrollHeight);
+  console.log(`📏 Page height: ${height}px`);
+
+  // Remove user messages if in "gpt-only" mode
+  if (mode === 'gpt-only') {
+    await page.evaluate(() => {
+      const userMessages = document.querySelectorAll('[data-message-author-role="user"]');
+      userMessages.forEach(el => el.remove());
+    });
+    console.log('🎯 Mode: gpt-only – removed user messages from DOM');
+  }
+
+  // Remove the form input box
+  await page.evaluate(() => {
+    const form = document.querySelector('form');
+    if (form) form.remove();
+  });
+  console.log('🧽 Removed ChatGPT input form from final PDF');
+
+  // Hide header, skip links, scrollbars
+  await page.evaluate(() => {
+    // 🔁 Remove header/nav
+    const header = document.querySelector('header');
+    if (header) header.remove();
+
+    // 🔁 Remove "Skip to content"
+    const skipLinks = [...document.querySelectorAll('a')]
+      .filter(el => el.innerText?.toLowerCase().includes('skip to content'));
+    skipLinks.forEach(el => el.remove());
+
+    [...document.querySelectorAll('*')].forEach(el => {
+    if (el.innerText?.trim().startsWith('ChatGPT can make mistakes')) {
+      el.style.display = 'none';
+      el.style.visibility = 'hidden';
+    }
+  });
+
+    // ✅ Hide scrollbars (all browsers)
+    const style = document.createElement('style');
+    style.innerHTML = `
+      *::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
+      * { scrollbar-width: none !important; -ms-overflow-style: none !important; }
+    `;
+    document.head.appendChild(style);
+     window.scrollTo(0, 0);
+  });
+
+  // Make main chat content scrollable and fully expanded
+  await page.evaluate(() => {
+    const chat = document.querySelector('main');
+    if (chat) {
+      chat.style.height = 'auto';
+      chat.style.maxHeight = 'none';
+      chat.style.overflow = 'visible';
+    }
+    window.scrollTo(0, document.body.scrollHeight);
+  });
+
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
+  console.log('👀 Review the chat. Scroll to the top if needed.');
+  await waitForEnterOrTimeout();
+
+  const pdfPath = path.resolve(__dirname, `../downloads/chat_${index}.pdf`);
+  await page.pdf({
+    path: pdfPath,
+    format: 'A4',
+    printBackground: true,
+    margin: { top: '30px', bottom: '30px', left: '10px', right: '10px' }
+  });
+
+  await browser.close();
+  console.log(`✅ PDF saved to: ${pdfPath}`);
+  return pdfPath;
+}
+
+module.exports = {
+  generatePDFfromLink,
+  getCustomFilename
+};
+
+

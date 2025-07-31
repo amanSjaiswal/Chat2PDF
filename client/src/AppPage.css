@@ -1,4 +1,4 @@
-/* MAIN LAYOUT */
+/* ========== MAIN LAYOUT ========== */
 .app-wrapper {
   display: flex;
   flex-direction: column;
@@ -7,6 +7,7 @@
   background: linear-gradient(to bottom right, #d8fcd0, #f8f8f8);
 }
 
+/* ========== HEADER ========== */
 .app-header {
   width: 100%;
   background: #bb9bb6;
@@ -19,7 +20,8 @@
   font-weight: bold;
 }
 
-.header-left, .header-right {
+.header-left,
+.header-right {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -34,15 +36,15 @@
   font-weight: bold;
   border: none;
   padding: 0.4rem 0.9rem;
-  transition: 0.2s ease;
   cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
 .header-right button:hover {
   background-color: #f3d1ee;
 }
 
-/* MAIN AREA */
+/* ========== MAIN CONTENT ========== */
 .app-main {
   display: flex;
   flex: 1;
@@ -55,7 +57,8 @@
   color: #333;
 }
 
-.left-panel, .right-panel {
+.left-panel,
+.right-panel {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -69,10 +72,7 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.left-panel {
-    background-color: #612458;
-}
-/* INPUTS & TEXTAREA */
+/* ========== INPUTS & TEXTAREAS ========== */
 textarea,
 input[type="text"] {
   width: 100%;
@@ -89,7 +89,7 @@ input:focus {
   border-color: #00bcd4;
 }
 
-/* BUTTONS */
+/* ========== BUTTONS ========== */
 .button-group {
   display: flex;
   justify-content: center;
@@ -97,31 +97,49 @@ input:focus {
   flex-wrap: wrap;
 }
 
-.button-group button,
-button.btn {
-  background-color: #ffffffa2;
-  color: rgb(0, 0, 0);
+.btn1,
+.clear-btn,
+.add-link-btn {
+  background-color: transparent;
+  border: 2px solid #bb9bb6;
+  color: #bb9bb6;
   font-size: 1rem;
   padding: 0.6rem 1.2rem;
   border-radius: 25px;
-  border: none;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.15s ease;
+  transition: all 0.3s ease;
   min-width: 130px;
+  font-weight: 600;
 }
 
-.button-group button:hover,
-button.btn:hover {
-  background-color: #90e2ec;
-  transform: scale(1.03);
+.btn1:hover,
+.add-link-btn:hover {
+  background-color: #bb9bb6;
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px rgba(187, 155, 182, 0.3);
 }
 
-.button-group button:disabled {
-  background-color: #ccc;
+.clear-btn {
+  border: 2px solid #e85c5c;
+  color: #e85c5c;
+}
+
+.clear-btn:hover {
+  background-color: #e85c5c;
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px rgba(232, 92, 92, 0.3);
+}
+
+button:disabled {
+  opacity: 0.6;
   cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
 }
 
-/* FOOTER */
+/* ========== FOOTER ========== */
 .app-footer {
   width: 100%;
   background-color: #f1f1f1;
@@ -140,17 +158,4 @@ button.btn:hover {
 
 .app-footer a:hover {
   text-decoration: underline;
-}
-
-.button-group button,
-button.btn1 {
-  background-color: #087cdbd2;
-  color: rgb(0, 0, 0);
-  font-size: 1rem;
-  padding: 0.6rem 1.2rem;
-  border-radius: 25px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.15s ease;
-  min-width: 130px;
 }

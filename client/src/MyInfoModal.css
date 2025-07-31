@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14,14 +14,17 @@
 .modal-content {
   background: white;
   padding: 30px;
-  border-radius: 10px;
+  border-radius: 12px;
   width: 400px;
   max-width: 90%;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  font-family: 'Segoe UI', sans-serif;
 }
 
 .modal-content h2 {
   margin-top: 0;
+  font-size: 1.3rem;
+  color: #333;
 }
 
 .modal-content ul {
@@ -32,11 +35,16 @@
 
 .modal-content li {
   margin-bottom: 10px;
+  font-size: 0.95rem;
 }
 
 .modal-content a {
   color: #0077cc;
   text-decoration: none;
+}
+
+.modal-content a:hover {
+  text-decoration: underline;
 }
 
 .close-btn {
@@ -45,6 +53,12 @@
   color: white;
   border: none;
   padding: 10px 15px;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
+  font-weight: 500;
+  transition: background 0.3s ease;
+}
+
+.close-btn:hover {
+  background: #c0392b;
 }

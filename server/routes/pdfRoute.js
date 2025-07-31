@@ -59,36 +59,77 @@ router.get('/', (req, res) => {
   res.send('📝 Please send a POST request with ChatGPT links to generate a PDF.');
 });
 
+// router.post('/', async (req, res) => {
+//   const { links, mode = 'full' } = req.body;
+
+//   if (!Array.isArray(links) || links.length === 0) {
+//     return res.status(400).json({ error: 'Please provide an array of ChatGPT share links.' });
+//   }
+//   console.log('📥 Received links:', links);
+//   console.log('🧾 Mode:', mode);
+//   try {
+//     const generatedPDFs = [];
+
+//     for (let i = 0; i < links.length; i++) {
+//       const pdfPath = await generatePDFfromLink(links[i], mode, i);
+//       generatedPDFs.push(path.resolve(pdfPath)); // ✅ ensure absolute path for deletion
+
+//       console.log(`✅ PDF ${i + 1} generated:`, pdfPath);
+//     }
+
+//     //   // ✅ Ask user for merged filename
+//     // const mergedName = await getCustomFilename(); // returns e.g., 'custom_output.pdf'
+//     // 🧩 Merge all PDFs into one
+//     const mergedPath = await mergePDFs(generatedPDFs, 'combined_chat.pdf');
+//     console.log(`✅ Mergw PDF  generated:`, mergedPath);
+
+//    // ✅ Serve as static file + send JSON response
+//     const finalUrl = 'http://localhost:5000/downloads/combined_chat.pdf';
+//     res.json({
+//       status: 'success',
+//       downloadUrl: finalUrl
+//     });
+
+
+//   } catch (err) {
+//     console.error('❌ PDF generation/merge failed:', err);
+//     res.status(500).json({ error: 'Failed to generate or merge PDFs.' });
+//   }
+// });
+
 router.post('/', async (req, res) => {
   const { links, mode = 'full' } = req.body;
 
   if (!Array.isArray(links) || links.length === 0) {
     return res.status(400).json({ error: 'Please provide an array of ChatGPT share links.' });
   }
+
   console.log('📥 Received links:', links);
   console.log('🧾 Mode:', mode);
+
   try {
     const generatedPDFs = [];
 
     for (let i = 0; i < links.length; i++) {
       const pdfPath = await generatePDFfromLink(links[i], mode, i);
-      generatedPDFs.push(path.resolve(pdfPath)); // ✅ ensure absolute path for deletion
-
+      generatedPDFs.push(path.resolve(pdfPath));
       console.log(`✅ PDF ${i + 1} generated:`, pdfPath);
     }
 
-    //   // ✅ Ask user for merged filename
-    // const mergedName = await getCustomFilename(); // returns e.g., 'custom_output.pdf'
-    // 🧩 Merge all PDFs into one
     const mergedPath = await mergePDFs(generatedPDFs, 'combined_chat.pdf');
-    console.log(`✅ Mergw PDF  generated:`, mergedPath);
+    console.log(`✅ Merged PDF generated:`, mergedPath);
 
-    // ✅ Send final merged PDF as download
-    res.download(mergedPath, 'combined_chat.pdf');
+    // ✅ Return URL to frontend
+    const downloadUrl = 'http://localhost:5000/downloads/combined_chat.pdf';
+
+    res.json({
+      status: 'success',
+      downloadUrl
+    });
 
   } catch (err) {
     console.error('❌ PDF generation/merge failed:', err);
-    res.status(500).json({ error: 'Failed to generate or merge PDFs.' });
+    res.status(500).json({ status: 'failed', error: 'Failed to generate or merge PDFs.' });
   }
 });
 

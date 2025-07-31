@@ -42,24 +42,24 @@ body, html {
   margin: 0;
   padding: 0;
   height: 100%;
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', sans-serif;
   background: linear-gradient(to bottom right, #f6fafaf5, #ffffff);
-   display: flex; 
+  display: flex;
   justify-content: center;
-  
 }
 
 .landing-container {
   text-align: center;
-  color: rgb(0, 0, 0);
+  color: #111;
   max-width: 500px;
-  padding: 80px;
+  padding: 80px 20px;
 }
 
 .landing-logo {
   width: 260px;
-  height: 280px;
+  height: auto;
   margin-bottom: 20px;
+  object-fit: contain;
 }
 
 .landing-button {
@@ -71,15 +71,15 @@ body, html {
   border-radius: 25px;
   cursor: pointer;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease;
 }
 
 .landing-button:hover {
+  transform: translateY(-2px);
   opacity: 0.9;
 }
 
-
 .tagline {
-  text-align: center;
   margin-top: 20px;
   line-height: 1.8;
   font-family: 'Segoe UI', sans-serif;
